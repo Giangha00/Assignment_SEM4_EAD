@@ -11,7 +11,7 @@ import org.example.entity.StudentScoreDTO;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "StudentListServlet", urlPatterns = {"/students", "/index", ""})
+@WebServlet(name = "StudentListServlet", urlPatterns = {"/students", "/index"})
 public class StudentListServlet extends HttpServlet {
 
     private final ScoreDAO scoreDAO = new ScoreDAO();

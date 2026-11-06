@@ -317,6 +317,16 @@
             background-color: #eff6ff;
         }
 
+        .action-delete {
+            color: #ef4444;
+            margin-left: 4px;
+        }
+
+        .action-delete:hover {
+            color: #b91c1c;
+            background-color: #fee2e2;
+        }
+
         .empty-row {
             text-align: center;
             padding: 36px;
@@ -367,6 +377,12 @@
                 <span>Cập nhật điểm môn học thành công!</span>
             </div>
         </c:if>
+        <c:if test="${param.success eq 'score_deleted'}">
+            <div class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Xóa điểm môn học thành công!</span>
+            </div>
+        </c:if>
 
         <!-- Action Bar: Buttons + Summary Counter -->
         <div class="action-bar">
@@ -379,7 +395,7 @@
                 </a>
             </div>
             <div class="result-count" id="resultCount">
-                Tổng số bản ghi: <strong>${scoreList.size()}</strong>
+                Tổng số bản ghi: <strong>${not empty scoreList ? scoreList.size() : 0}</strong>
             </div>
         </div>
 
@@ -463,7 +479,7 @@
                         <th>Score 2</th>
                         <th>Credit</th>
                         <th>Grade</th>
-                        <th style="width: 60px; text-align: center;"></th>
+                        <th style="width: 90px; text-align: center;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -471,11 +487,11 @@
                         <c:when test="${not empty scoreList}">
                             <c:forEach var="item" items="${scoreList}">
                                 <tr class="data-row"
-                                    data-student-id="${item.studentCode.toLowerCase()}"
-                                    data-student-name="${item.studentName.toLowerCase()}"
-                                    data-subject-name="${(item.subjectCode + ' ' + item.subjectName).toLowerCase()}"
+                                    data-student-id="${item.studentCode}"
+                                    data-student-name="${item.studentName}"
+                                    data-subject-name="${item.subjectCode} ${item.subjectName}"
                                     data-credit="${item.credit}"
-                                    data-grade="${item.grade.toUpperCase()}">
+                                    data-grade="${item.grade}">
                                     <td class="col-stt">${item.id}</td>
                                     <td><strong>${item.studentCode}</strong></td>
                                     <td>${item.studentName}</td>
@@ -488,10 +504,16 @@
                                             ${item.grade}
                                         </span>
                                     </td>
-                                    <td style="text-align: center;">
+                                    <td style="text-align: center; white-space: nowrap;">
                                         <a href="${pageContext.request.contextPath}/score/edit?id=${item.studentScoreId}"
                                            class="action-link" title="Chỉnh sửa điểm">
                                             <i class="fa-solid fa-pencil"></i>
+                                        </a>
+                                        <a href="${pageContext.request.contextPath}/score/delete?id=${item.studentScoreId}"
+                                           class="action-link action-delete"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa bản ghi điểm này?')"
+                                           title="Xóa điểm">
+                                            <i class="fa-solid fa-trash-can"></i>
                                         </a>
                                     </td>
                                 </tr>

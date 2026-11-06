@@ -105,5 +105,60 @@ public class StudentDAO {
         }
         return false;
     }
+
+    public boolean updateStudent(Student student) {
+        String sql = "UPDATE student_t SET student_code = ?, full_name = ?, address = ? WHERE student_id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, student.getStudentCode());
+            ps.setString(2, student.getFullName());
+            ps.setString(3, student.getAddress());
+            ps.setInt(4, student.getStudentId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            DBUtil.close(ps, conn);
+        }
+    }
+
+    public boolean deleteStudent(int studentId) {
+        Connection conn = null;
+        PreparedStatement psScore = null;
+        PreparedStatement psStudent = null;
+
+        try {
+            conn = DBUtil.getConnection();
+            conn.setAutoCommit(false);
+
+            // Xoa diem cua sinh vien truoc (tranh loi foreign key constraint)
+            String sqlScore = "DELETE FROM student_score_t WHERE student_id = ?";
+            psScore = conn.prepareStatement(sqlScore);
+            psScore.setInt(1, studentId);
+            psScore.executeUpdate();
+
+            // Xoa sinh vien
+            String sqlStudent = "DELETE FROM student_t WHERE student_id = ?";
+            psStudent = conn.prepareStatement(sqlStudent);
+            psStudent.setInt(1, studentId);
+            int affected = psStudent.executeUpdate();
+
+            conn.commit();
+            return affected > 0;
+        } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ignored) {}
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            DBUtil.close(psScore, psStudent, conn);
+        }
+    }
 }
 

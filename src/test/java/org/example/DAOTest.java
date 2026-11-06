@@ -44,5 +44,38 @@ public class DAOTest {
             assertNotNull(dto.getGrade());
         }
     }
-}
 
+    @Test
+    public void testFilters() {
+        ScoreDAO dao = new ScoreDAO();
+
+        // 1. Filter by Student Id
+        List<StudentScoreDTO> byStudentId = dao.searchScoreDTOs("2007A10", null, null, null, null);
+        assertNotNull(byStudentId);
+        assertFalse(byStudentId.isEmpty());
+        assertEquals("2007A10", byStudentId.get(0).getStudentCode());
+
+        // 2. Filter by Student Name
+        List<StudentScoreDTO> byName = dao.searchScoreDTOs(null, "Nguyễn Văn A", null, null, null);
+        assertNotNull(byName);
+        assertFalse(byName.isEmpty());
+
+        // 3. Filter by Subject Name
+        List<StudentScoreDTO> bySubject = dao.searchScoreDTOs(null, null, "JAVA", null, null);
+        assertNotNull(bySubject);
+        assertFalse(bySubject.isEmpty());
+
+        // 4. Filter by Credit
+        List<StudentScoreDTO> byCredit = dao.searchScoreDTOs(null, null, null, 4, null);
+        assertNotNull(byCredit);
+        assertFalse(byCredit.isEmpty());
+        assertEquals(4, byCredit.get(0).getCredit());
+
+        // 5. Filter by Grade
+        List<StudentScoreDTO> byGradeA = dao.searchScoreDTOs(null, null, null, null, "A");
+        assertNotNull(byGradeA);
+        for (StudentScoreDTO dto : byGradeA) {
+            assertEquals("A", dto.getGrade());
+        }
+    }
+}

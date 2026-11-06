@@ -9,7 +9,7 @@ import java.util.Properties;
 public class DBUtil {
     private static String url = "jdbc:mysql://localhost:3306/sis?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true&characterEncoding=UTF-8";
     private static String username = "root";
-    private static String password = "root";
+    private static String password = "";
     private static String driver = "com.mysql.cj.jdbc.Driver";
 
     static {
